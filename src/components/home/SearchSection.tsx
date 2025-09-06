@@ -2,6 +2,7 @@ import { Search, MapPin, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -11,6 +12,13 @@ import {
 } from "@/components/ui/select";
 
 const SearchSection = () => {
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate('/search');
+  };
+
   return (
     <div className="w-full">
       {/* Hero Banner */}
@@ -24,12 +32,14 @@ const SearchSection = () => {
           </p>
         </div>
         <div className="flex justify-center">
-          <Button 
-            variant="secondary" 
-            className="bg-white text-primary hover:bg-white/90 font-medium px-8"
-          >
-            🛍️ سجل موسسيتك الآن
-          </Button>
+          <Link to="/provider-register">
+            <Button 
+              variant="secondary" 
+              className="bg-white text-primary hover:bg-white/90 font-medium px-8"
+            >
+              🛍️ سجل موسسيتك الآن
+            </Button>
+          </Link>
         </div>
       </Card>
 
@@ -39,56 +49,62 @@ const SearchSection = () => {
           البحث عن الخدمات في الأردن
         </h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {/* Category Select */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">الفئة</label>
-            <Select dir="rtl">
-              <SelectTrigger className="h-12">
-                <SelectValue placeholder="جميع الفئات" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">جميع الفئات</SelectItem>
-                <SelectItem value="beauty">صالونات التجميل</SelectItem>
-                <SelectItem value="hair">صالونات الشعر</SelectItem>
-                <SelectItem value="spa">مراكز السبا</SelectItem>
-                <SelectItem value="clinic">عيادات التجميل</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <form onSubmit={handleSearch}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Category Select */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">الفئة</label>
+              <Select dir="rtl">
+                <SelectTrigger className="h-12">
+                  <SelectValue placeholder="جميع الفئات" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">جميع الفئات</SelectItem>
+                  <SelectItem value="beauty">صالونات التجميل</SelectItem>
+                  <SelectItem value="hair">صالونات الشعر</SelectItem>
+                  <SelectItem value="spa">مراكز السبا</SelectItem>
+                  <SelectItem value="clinic">عيادات التجميل</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-          {/* Search Input */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">البحث</label>
-            <div className="relative">
-              <Input
-                type="text"
-                placeholder="ابحث عن صالون أو خدمة..."
-                className="h-12 pr-10"
-              />
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            {/* Search Input */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">البحث</label>
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="ابحث عن صالون أو خدمة..."
+                  className="h-12 pr-10"
+                />
+                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              </div>
+            </div>
+
+            {/* Search Button */}
+            <div className="flex items-end">
+              <Button type="submit" className="btn-gradient w-full h-12 font-medium">
+                <Search className="ml-2 h-4 w-4" />
+                بحث
+              </Button>
             </div>
           </div>
-
-          {/* Search Button */}
-          <div className="flex items-end">
-            <Button className="btn-gradient w-full h-12 font-medium">
-              <Search className="ml-2 h-4 w-4" />
-              بحث
-            </Button>
-          </div>
-        </div>
+        </form>
 
         {/* Location */}
         <div className="flex items-center justify-between p-4 bg-accent rounded-lg">
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" className="gap-2">
-              <MapPin className="h-4 w-4" />
-              خريطة
-            </Button>
-            <Button variant="outline" size="sm" className="gap-2">
-              📋 قائمة
-            </Button>
+            <Link to="/search?view=map">
+              <Button variant="outline" size="sm" className="gap-2">
+                <MapPin className="h-4 w-4" />
+                خريطة
+              </Button>
+            </Link>
+            <Link to="/search?view=list">
+              <Button variant="outline" size="sm" className="gap-2">
+                📋 قائمة
+              </Button>
+            </Link>
           </div>
           <div className="text-sm text-muted-foreground">
             <Button variant="outline" className="btn-gradient text-white border-0">

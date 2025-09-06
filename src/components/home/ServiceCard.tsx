@@ -2,6 +2,7 @@ import { Star, MapPin, Phone } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 
 interface ServiceCardProps {
   name: string;
@@ -24,6 +25,9 @@ const ServiceCard = ({
   distance,
   category 
 }: ServiceCardProps) => {
+  // Generate a simple ID for the service based on the name
+  const serviceId = name.replace(/\s+/g, '-').toLowerCase();
+  
   return (
     <Card className="card-elevated p-6 hover:shadow-xl transition-all duration-300">
       <div className="space-y-4">
@@ -50,7 +54,11 @@ const ServiceCard = ({
 
         {/* Service Name */}
         <div>
-          <h3 className="text-lg font-bold text-foreground mb-1">{name}</h3>
+          <Link to={`/service/${serviceId}`}>
+            <h3 className="text-lg font-bold text-foreground mb-1 hover:text-primary cursor-pointer">
+              {name}
+            </h3>
+          </Link>
           <Badge variant="outline" className="text-xs mb-2">
             {category}
           </Badge>
@@ -101,9 +109,11 @@ const ServiceCard = ({
 
         {/* Bottom Actions */}
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="text-xs">
-            اضغط للتفاصيل
-          </Button>
+          <Link to={`/service/${serviceId}`} className="flex-1">
+            <Button variant="outline" size="sm" className="w-full text-xs">
+              اضغط للتفاصيل
+            </Button>
+          </Link>
           <Button className="btn-gradient flex-1">
             صالون نسائي
           </Button>

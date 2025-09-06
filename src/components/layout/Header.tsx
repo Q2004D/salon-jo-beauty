@@ -1,5 +1,6 @@
 import { Bell, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +14,7 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo/Brand - Right side for RTL */}
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <div className="bg-white/20 p-2 rounded-lg">
               <span className="text-2xl">👑</span>
             </div>
@@ -21,7 +22,7 @@ const Header = () => {
               <h1 className="text-xl font-bold text-white">Body Care</h1>
               <p className="text-xs text-white/90">مرحباً</p>
             </div>
-          </div>
+          </Link>
 
           {/* User Actions - Left side for RTL */}
           <div className="flex items-center gap-4">
@@ -45,18 +46,28 @@ const Header = () => {
                   className="flex items-center gap-2 text-white hover:bg-white/10"
                 >
                   <User className="h-4 w-4" />
-                  <span className="hidden md:inline">خروج</span>
+                  <span className="hidden md:inline">الحساب</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem>
-                  <User className="ml-2 h-4 w-4" />
-                  <span>الملف الشخصي</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <LogOut className="ml-2 h-4 w-4" />
-                  <span>تسجيل الخروج</span>
-                </DropdownMenuItem>
+                <Link to="/profile">
+                  <DropdownMenuItem>
+                    <User className="ml-2 h-4 w-4" />
+                    <span>الملف الشخصي</span>
+                  </DropdownMenuItem>
+                </Link>
+                <Link to="/admin">
+                  <DropdownMenuItem>
+                    <User className="ml-2 h-4 w-4" />
+                    <span>لوحة الأدمن</span>
+                  </DropdownMenuItem>
+                </Link>
+                <Link to="/login">
+                  <DropdownMenuItem>
+                    <LogOut className="ml-2 h-4 w-4" />
+                    <span>تسجيل الخروج</span>
+                  </DropdownMenuItem>
+                </Link>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

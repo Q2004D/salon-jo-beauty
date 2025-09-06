@@ -3,40 +3,55 @@
 @tailwind utilities;
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+All colors MUST be HSL. RTL and Arabic support included.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 248 250% 98%;
+    --foreground: 216 15% 25%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 216 15% 25%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 216 15% 25%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Purple-Blue gradient theme from reference */
+    --primary: 250 85% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 250 95% 75%;
+    --primary-dark: 250 75% 45%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 220 90% 55%;
+    --secondary-foreground: 0 0% 100%;
+    
+    --accent: 240 100% 95%;
+    --accent-foreground: 250 85% 60%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 10% 50%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 250 85% 60%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Gradients matching the reference design */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    --gradient-header: linear-gradient(135deg, hsl(250 85% 60%), hsl(220 90% 55%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(240 100% 99%));
+    
+    /* Shadows for elevated components */
+    --shadow-card: 0 4px 6px -1px hsl(220 10% 50% / 0.1), 0 2px 4px -1px hsl(220 10% 50% / 0.06);
+    --shadow-elevated: 0 10px 15px -3px hsl(220 10% 50% / 0.1), 0 4px 6px -2px hsl(220 10% 50% / 0.05);
+    
+    /* Transitions for smooth interactions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
 
@@ -99,7 +114,49 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    direction: rtl;
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-feature-settings: 'kern' 1;
+  }
+  
+  /* Arabic typography improvements */
+  .arabic-text {
+    font-family: 'Cairo', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  
+  /* RTL input styling */
+  input[type="text"], input[type="email"], input[type="tel"], textarea, select {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  /* Ensure buttons and interactive elements work well in RTL */
+  .btn-gradient {
+    background: var(--gradient-primary);
+    transition: var(--transition-smooth);
+  }
+  
+  .btn-gradient:hover {
+    background: var(--gradient-header);
+    transform: translateY(-1px);
+  }
+  
+  .card-elevated {
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+    border-radius: var(--radius);
+    transition: var(--transition-smooth);
+  }
+  
+  .card-elevated:hover {
+    box-shadow: var(--shadow-elevated);
+    transform: translateY(-2px);
   }
 }

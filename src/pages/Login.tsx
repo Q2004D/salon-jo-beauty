@@ -30,18 +30,24 @@ const Login = () => {
     }
 
     if (!hasErrors) {
-      // Simulate API call
-      setTimeout(() => {
-        console.log("Login attempt:", { email, password });
-        setIsLoading(false);
-        // Here you would integrate with your PHP API
-        // For now, just show success or error
-        if (email === "admin@example.com" && password === "password") {
-          window.location.href = "/admin";
-        } else {
-          setErrors({ email: "", password: "بيانات الدخول غير صحيحة" });
-        }
-      }, 1000);
+  fetch('http://localhost/salon-jo-beauty/api/login.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = "/admin"; // or redirect as needed
+          } else {
+            setErrors({ email: "", password: "بيانات الدخول غير صحيحة" });
+          }
+          setIsLoading(false);
+        })
+        .catch(() => {
+          setErrors({ email: "", password: "حدث خطأ أثناء الاتصال بالخادم" });
+          setIsLoading(false);
+        });
     } else {
       setIsLoading(false);
     }

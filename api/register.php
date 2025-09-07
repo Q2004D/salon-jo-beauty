@@ -1,11 +1,20 @@
+
 <?php
+// CORS headers
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
 require_once '../config/database.php';
 
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     sendResponse(false, 'Method not allowed', null, 405);
 }
-
 try {
     // Get JSON input
     $input = json_decode(file_get_contents('php://input'), true);

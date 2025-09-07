@@ -67,15 +67,30 @@ const Register = () => {
     if (!validateForm()) return;
 
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Registration data:", formData);
-      setIsLoading(false);
-      // Here you would integrate with your PHP API
-      alert("تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.");
-      window.location.href = "/login";
-    }, 1500);
+  fetch('http://localhost/salon-jo-beauty/api/register.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: formData.firstName + ' ' + formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.");
+          window.location.href = "/login";
+        } else {
+          setErrors(prev => ({ ...prev, api: data.message }));
+        }
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setErrors(prev => ({ ...prev, api: "حدث خطأ أثناء الاتصال بالخادم" }));
+        setIsLoading(false);
+      });
   };
 
   return (

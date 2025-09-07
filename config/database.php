@@ -5,19 +5,43 @@ define('DB_USERNAME', 'root');
 define('DB_PASSWORD', ''); // Default XAMPP MySQL password is empty
 define('DB_NAME', 'salon_beauty');
 
+// Session configuration - IMPORTANT FOR FRONTEND INTEGRATION
+ini_set('session.cookie_httponly', 1);
+ini_set('session.use_only_cookies', 1);
+ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
+ini_set('session.cookie_samesite', 'Lax');
+
 // Start session if not already started
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Enable CORS for frontend integration
-header("Access-Control-Allow-Origin: *");
+// Enable CORS for frontend integration - UPDATED FOR LOCALHOST
+$allowedOrigins = [
+    'http://localhost:5173', // Vite default port
+    'http://localhost:3000', // React default port
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:3000',
+    'https://lovable.dev', // Your Lovable project
+    'null' // For file:// protocol during development
+];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '*';
+
+if (in_array($origin, $allowedOrigins)) {
+    header("Access-Control-Allow-Origin: $origin");
+} else {
+    header("Access-Control-Allow-Origin: *");
+}
+
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+header("Access-Control-Allow-Credentials: true"); // IMPORTANT for sessions
 header("Content-Type: application/json; charset=UTF-8");
 
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
     exit(0);
 }
 
@@ -35,14 +59,20 @@ class Database {
     private function connect() {
         try {
             $this->connection = new PDO(
-                "mysql:host={$this->host};dbname={$this->database};charset=utf8",
+                "mysql:host={$this->host};dbname={$this->database};charset=utf8mb4",
                 $this->username,
-                $this->password
+                $this->password,
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false
+                ]
             );
-            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch(PDOException $e) {
-            die("Database connection failed: " . $e->getMessage());
+            die(json_encode([
+                'success' => false,
+                'message' => 'Database connection failed: ' . $e->getMessage()
+            ]));
         }
     }
 
@@ -86,8 +116,13 @@ function sendResponse($success = true, $message = '', $data = null, $statusCode 
     echo json_encode([
         'success' => $success,
         'message' => $message,
-        'data' => $data
-    ]);
+        'data' => $data,
+        'debug' => [
+            'session_id' => session_id(),
+            'session_status' => session_status(),
+            'session_data' => $_SESSION ?? []
+        ]
+    ], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
